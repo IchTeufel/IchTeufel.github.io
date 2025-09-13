@@ -1,2 +1,507 @@
 <h1>hello</h1>
 <h2>world</h2>
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ТГМП - Тамара Георгиевна Могучий программист</title>
+    <style>
+        /* Общие стили */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Arial', sans-serif;
+        }
+        
+        body {
+            background-color: #f5f5f5;
+            color: #333;
+            line-height: 1.6;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+        
+        /* Шапка */
+        header {
+            background: linear-gradient(135deg, #2c3e50 0%, #4a69bd 100%);
+            color: white;
+            padding: 20px 0;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+        
+        .logo-container {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        
+        .logo {
+            display: flex;
+            align-items: center;
+        }
+        
+        .logo h1 {
+            font-size: 2rem;
+            margin-left: 10px;
+        }
+        
+        .logo-icon {
+            font-size: 2.5rem;
+            background: white;
+            color: #4a69bd;
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        nav ul {
+            display: flex;
+            list-style: none;
+        }
+        
+        nav ul li {
+            margin-left: 20px;
+        }
+        
+        nav ul li a {
+            color: white;
+            text-decoration: none;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+        
+        nav ul li a:hover {
+            color: #f6b93b;
+        }
+        
+        /* Герой секция */
+        .hero {
+            padding: 80px 0;
+            text-align: center;
+            background: white;
+            margin: 20px 0;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+        }
+        
+        .hero h2 {
+            font-size: 2.5rem;
+            margin-bottom: 20px;
+            color: #2c3e50;
+        }
+        
+        .hero p {
+            font-size: 1.2rem;
+            max-width: 800px;
+            margin: 0 auto 30px;
+            color: #666;
+        }
+        
+        .btn {
+            display: inline-block;
+            background: #4a69bd;
+            color: white;
+            padding: 12px 30px;
+            border-radius: 30px;
+            text-decoration: none;
+            font-weight: bold;
+            transition: all 0.3s ease;
+        }
+        
+        .btn:hover {
+            background: #3c58a8;
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+        
+        /* О секциях */
+        .section {
+            padding: 60px 0;
+        }
+        
+        .section-title {
+            text-align: center;
+            margin-bottom: 50px;
+        }
+        
+        .section-title h2 {
+            font-size: 2.2rem;
+            color: #2c3e50;
+            position: relative;
+            display: inline-block;
+            padding-bottom: 15px;
+        }
+        
+        .section-title h2::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 80px;
+            height: 3px;
+            background: #4a69bd;
+        }
+        
+        /* Обо мне */
+        .about-content {
+            display: flex;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+        
+        .about-text {
+            flex: 1;
+            min-width: 300px;
+            padding-right: 30px;
+        }
+        
+        .about-image {
+            flex: 1;
+            min-width: 300px;
+            text-align: center;
+        }
+        
+        .
+      about-image img {
+            max-width: 100%;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+        
+        /* Навыки */
+        .skills-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 30px;
+        }
+        
+        .skill-card {
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+        
+        .skill-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.1);
+        }
+        
+        .skill-icon {
+            font-size: 3rem;
+            color: #4a69bd;
+            margin-bottom: 20px;
+        }
+        
+        /* Проекты */
+        .projects-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+        }
+        
+        .project-card {
+            background: white;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+        }
+        
+        .project-image {
+            height: 200px;
+            background: #4a69bd;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 1.5rem;
+        }
+        
+        .project-details {
+            padding: 20px;
+        }
+        
+        /* Контакты */
+        .contact-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+        }
+        
+        .contact-info {
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+        }
+        
+        .contact-form {
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: 500;
+        }
+        
+        .form-group input,
+        .form-group textarea {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 1rem;
+        }
+        
+        .form-group textarea {
+            min-height: 120px;
+        }
+        
+        /* Футер */
+        footer {
+            background: #2c3e50;
+            color: white;
+            padding: 40px 0;
+            text-align: center;
+        }
+        
+        .footer-content {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        
+        .social-links {
+            display: flex;
+            margin: 20px 0;
+        }
+        
+        .social-links a {
+            color: white;
+            font-size: 1.5rem;
+            margin: 0 10px;
+            transition: all 0.3s ease;
+        }
+        
+        .social-links a:hover {
+            color: #f6b93b;
+        }
+        
+        /* Адаптивность */
+        @media (max-width: 768px) {
+            .logo-container {
+                flex-direction: column;
+            }
+            
+            nav ul {
+                margin-top: 20px;
+            }
+            
+            .about-content {
+                flex-direction: column;
+            }
+            
+            .about-text {
+                padding-right: 0;
+                margin-bottom: 30px;
+            }
+            
+            .hero h2 {
+                font-size: 2rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Шапка -->
+    <header>
+        <div class="container">
+            <div class="logo-container">
+                <div class="logo">
+                  <div class="logo-icon">ТГ</div>
+                    <h1>ТГМП</h1>
+                </div>
+                <nav>
+                    <ul>
+                        <li><a href="#about">Обо мне</a></li>
+                        <li><a href="#skills">Навыки</a></li>
+                        <li><a href="#projects">Проекты</a></li>
+                        <li><a href="#contact">Контакты</a></li>
+                    </ul>
+                </nav>
+            </div>
+        </div>
+    </header>
+
+    <!-- Основной контент -->
+    <main>
+        <!-- Герой секция -->
+        <section class="hero">
+            <div class="container">
+                <h2>Тамара Георгиевна Могучий программист</h2>
+                <p>Создаю инновационные решения на стыке технологий и творчества. Превращаю сложные задачи в элегантный код.</p>
+                <a href="#contact" class="btn">Связаться со мной</a>
+            </div>
+        </section>
+
+        <!-- Обо мне -->
+        <section id="about" class="section">
+            <div class="container">
+                <div class="section-title">
+                    <h2>Обо мне</h2>
+                </div>
+                <div class="about-content">
+                    <div class="about-text">
+                        <p>Привет! Я Тамара Георгиевна, senior-разработчик с более чем 15-летним опытом создания программного обеспечения. Специализируюсь на веб-разработке, искусственном интеллекте и создании масштабируемых архитектур.</p>
+                        <p>Мой подход сочетает глубокие технические знания с вниманием к деталям и пользовательскому опыту. Я верю, что хороший код должен быть не только функциональным, но и читаемым, поддерживаемым и элегантным.</p>
+                        <p>Помимо программирования, я увлекаюсь менторством и преподаванием. Мне нравится делиться знаниями и помогать новому поколению разработчиков расти и развиваться в профессии.</p>
+                    </div>
+                    <div class="about-image">
+                        <div style="background: #4a69bd; height: 300px; display: flex; align-items: center; justify-content: center; color: white; border-radius: 10px;">
+                            <span>Изображение Тамары Георгиевны</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Навыки -->
+        <section id="skills" class="section" style="background: #f9f9f9;">
+            <div class="container">
+                <div class="section-title">
+                    <h2>Мои навыки</h2>
+                </div>
+                <div class="skills-container">
+                    <div class="skill-card">
+                        <div class="skill-icon">{}</div>
+                        <h3>Веб-разработка</h3>
+                        <p>HTML, CSS, JavaScript, TypeScript, React, Vue, Angular, Node.js, Express</p>
+                    </div>
+                    <div class="skill-card">
+                        <div class="skill-icon">🤖</div>
+                        <h3>Искусственный интеллект</h3>
+                        <p>Машинное обучение, нейронные сети, обработка естественного языка, компьютерное зрение</p>
+                    </div>
+                    <div class="skill-card">
+                        <div class="skill-icon">📱</div>
+                        <h3>Мобильная разработка</h3>
+                        <p>React Native, Flutter, iOS, Android, кроссплатформенные приложения</p>
+                    </div>
+                    <div class="skill-card">
+                        <div class="skill-icon">⚙️</div>
+                        <h3>Бэкенд-разработка</h3>
+                        <p>Python, Django, Ruby on Rails, PHP, Laravel, базы данных, архитектура API</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Проекты -->
+        <section id="projects" class="section">
+            <div class="container">
+                <div class="section-title">
+                    <h2>Мои проекты</h2>
+                </div>
+                <div class="projects-container">
+                    <div class="project-card">
+                        <div class="project-image">Умный ассистент</div>
+                        <div class="project-details">
+                            <h3>Умный ассистент</h3>
+                            <p>Голосовой помощник на основе искусственного интеллекта для автоматизации повседневных задач.</p>
+                        </div>
+                    </div>
+                    <div class="project-card">
+                        <div class="project-image">Образовательная платформа</div>
+                        <div class="project-details">
+                            <h3>Образовательная платформа</h3>
+                            <p>Онлайн-платформа для обучения программированию с интерактивными заданиями и проектами.</p>
+                        </div>
+                    </div>
+                    <div class="project-card">
+                        <div class="project-image">Система анализа данных</div>
+                        <div class="project-details">
+                            <h3>Система анализа данных</h3>
+                            <p>Мощная система для обработки и визуализации больших данных с машинным обучением.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Контакты -->
+        <section id="contact" class="section" style="background: #f9f9f9;">
+            <div class="container">
+                <div class="section-title">
+                    <h2>Свяжитесь со мной</h2>
+                </div>
+                <div class="contact-container">
+                    <div class="contact-info">
+                        <h3>Контактная информация</h3>
+                        <p>Готова к новым вызовам и интересным проектам. Давайте создавать что-то удивительное вместе!</p>
+                        <p>📧 Email: tgmp@example.com</p>
+                        <p>📞 Телефон: +7 (XXX) XXX-XX-XX</p>
+                        <p>📍 Адрес: Москва, Россия</p>
+                    </div>
+                    <div class="contact-form">
+                        <h3>Отправить сообщение</h3>
+                        <form>
+                            <div class="form-group">
+                                <label for="name">Имя</label>
+                                <input type="text" id="name" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="email">Email</label>
+                                <input type="email" id="email" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="message">Сообщение</label>
+                                <textarea id="message" required></textarea>
+                            </div>
+                            <button type="submit" class="btn">Отправить</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Футер -->
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <div class="logo">
+                    <div class="logo-icon">ТГ</div>
+                    <h1>ТГМП</h1>
+                </div>
+                <div class="social-links">
+                    <a href="#">📱</a>
+                    <a href="#">💻</a>
+                    <a href="#">📘</a>
+                    <a href="#">🐙</a>
+                </div>
+                <p>© 2025 ТГМП - Тамара Георгиевна Могучий программист. Все права защищены.</p>
+            </div>
+        </div>
+    </footer>
+</body>
+</html>

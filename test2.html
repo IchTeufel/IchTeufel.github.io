@@ -1,0 +1,420 @@
+<p class="description">Система сбора и визуализации данных с станков числового программного управления в реальном времени</p>
+        </header>
+        
+        <div class="control-panel">
+            <button class="btn" id="fetch-data">Получить данные</button>
+            <button class="btn" id="reset-data">Сбросить</button>
+        </div>
+        
+        <div id="loading" class="loading" style="display: none;">
+            <h2>Загрузка данных...</h2>
+        </div>
+        
+        <div id="error-message" class="error" style="display: none;">
+            <h2>Ошибка при загрузке данных</h2>
+            <p id="error-text"></p>
+        </div>
+        
+        <div id="dashboard" class="dashboard" style="display: none;">
+            <div class="data-card">
+                <h2>Основные параметры</h2>
+                <div class="data-item">
+                    <span class="data-label">Моточасы:</span>
+                    <span class="data-value" id="motor-hours">-</span>
+                </div>
+                <div class="data-item">
+                    <span class="data-label">Название программы:</span>
+                    <span class="data-value" id="program-name">-</span>
+                </div>
+                <div class="data-item">
+                    <span class="data-label">Статус:</span>
+                    <span class="data-value" id="status">-</span>
+                </div>
+                <div class="data-item">
+                    <span class="data-label">Время работы:</span>
+                    <span class="data-value" id="operation-time">-</span>
+                </div>
+            </div>
+            
+            <div class="data-card">
+                <h2>Параметры обработки</h2>
+                <div class="data-item">
+                    <span class="data-label">Скорость шпинделя:</span>
+                    <span class="data-value" id="spindle-speed">-</span>
+                </div>
+                <div class="data-item">
+                    <span class="data-label">Подача:</span>
+                    <span class="data-value" id="feed-rate">-</span>
+                </div>
+                <div class="data-item">
+                    <span class="data-label">Ось X:</span>
+                    <span class="data-value" id="axis-x">-</span>
+                </div>
+                <div class="data-item">
+                    <span class="data-label">Ось Y:</span>
+                    <span class="data-value" id="axis-y">-</span>
+                </div>
+                <div class="data-item">
+                    <span class="data-label">Ось Z:</span>
+                    <span class="data-value" id="axis-z">-</span>
+                </div>
+            </div>
+            
+            <div class="data-card">
+                <h2>Дополнительные параметры</h2>
+                <div class="data-item">
+                    <span class="data-label">Температура:</span>
+                    <span class="data-value" id="temperature">-</span>
+                </div>
+                <div class="data-item">
+                    <span class="data-label">Вибрация:</span>
+                    <span class="data-value" id="vibration">-</span>
+                </div>
+                <div class="data-item">
+                    <span class="data-label">Мощность:</span>
+                    <span class="data-value" id="power">-</span>
+                </div>
+                <div class="data-item">
+                    <span class="data-label">Загрузка:</span>
+                    <span class="data-value" id="load">-</span>
+                </div>
+            </div>
+        </div>
+        
+        <div class="chart-container">
+            <div class="chart-title">История моточасов</div>
+            <canvas id="motorHoursChart"></canvas>
+        </div>
+    </div>
+
+    <script>
+        // Элементы DOM
+        const fetchBtn = document.getElementById('fetch-data');
+        const resetBtn = document.getElementById('reset-data');
+        const dashboard = document.getElementById('dashboard');
+        const loading = document.getElementById('loading');
+      const errorMessage = document.getElementById('error-message');
+        const errorText = document.getElementById('error-text');
+        
+        // Переменные для хранения данных
+        let cncData = null;
+        let motorHoursChart = null;
+        
+        // Функция для получения данных с сервера
+        async function fetchCNCData() {
+            try {
+                // Показываем индикатор загрузки
+                loading.style.display = 'block';
+                dashboard.style.display = 'none';
+                errorMessage.style.display = 'none';
+                
+                // Выполняем запрос к API
+                const response = await fetch('https://cnc.kovalev.team/get/3');
+                
+                if (!response.ok) {
+                    throw new Error(`Ошибка HTTP: ${response.status}`);
+                }
+                
+                // Парсим JSON ответ[citation:1][citation:5]
+                cncData = await response.json();
+                
+                // Обновляем интерфейс
+                updateDashboard(cncData);
+                
+                // Скрываем индикатор загрузки и показываем данные
+                loading.style.display = 'none';
+                dashboard.style.display = 'grid';
+                
+            } catch (error) {
+                // Обрабатываем ошибки
+                console.error('Ошибка при получении данных:', error);
+                loading.style.display = 'none';
+                errorMessage.style.display = 'block';
+                errorText.textContent = error.message;
+            }
+        }
+        
+        // Функция для обновления интерфейса данными
+        function updateDashboard(data) {
+            // Основные параметры
+            document.getElementById('motor-hours').textContent = data.motorHours !== undefined ? 
+                ${data.motorHours} ч : 'Н/Д';
+            document.getElementById('program-name').textContent = data.programName || 'Не указано';
+            document.getElementById('status').textContent = data.status || 'Неизвестен';
+            document.getElementById('operation-time').textContent = data.operationTime !== undefined ? 
+                ${data.operationTime} мин : 'Н/Д';
+            
+            // Параметры обработки
+            document.getElementById('spindle-speed').textContent = data.spindleSpeed !== undefined ? 
+                ${data.spindleSpeed} об/мин : 'Н/Д';
+            document.getElementById('feed-rate').textContent = data.feedRate !== undefined ? 
+                ${data.feedRate} мм/мин : 'Н/Д';
+            document.getElementById('axis-x').textContent = data.x !== undefined ? 
+                ${data.x} мм : 'Н/Д';
+            document.getElementById('axis-y').textContent = data.y !== undefined ? 
+                ${data.y} мм : 'Н/Д';
+            document.getElementById('axis-z').textContent = data.z !== undefined ? 
+                ${data.z} мм : 'Н/Д';
+            
+            // Дополнительные параметры
+            document.getElementById('temperature').textContent = data.temperature !== undefined ? 
+                ${data.temperature} °C : 'Н/Д';
+            document.getElementById('vibration').textContent = data.vibration !== undefined ? 
+                ${data.vibration} мм/с : 'Н/Д';
+            document.getElementById('power').textContent = data.power !== undefined ? 
+                ${data.power} кВт : 'Н/Д';
+            document.getElementById('load').textContent = data.load !== undefined ? 
+                ${data.load}% : 'Н/Д';
+            
+            // Обновляем график моточасов
+            updateMotorHoursChart(data);
+        }
+        
+        // Функция для обновления графика моточасов
+        function updateMotorHoursChart(data) {
+            const ctx = document.getElementById('motorHoursChart').getContext('2d');
+            
+            // Если график уже существует, уничтожаем его
+            if (motorHoursChart) {
+                motorHoursChart.destroy();
+            }
+            
+            // Создаем фиктивные исторические данные для демонстрации
+      const historicalData = {
+                labels: ['10:00', '11:00', '12:00', '13:00', '14:00', '15:00', '16:00'],
+                values: [120, 125, 130, 135, 140, 145, data.motorHours || 150]
+            };
+            
+            // Создаем новый график
+            motorHoursChart = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: historicalData.labels,
+                    datasets: [{
+                        label: 'Моточасы',
+                        data: historicalData.values,
+                        borderColor: '#4cc9f0',
+                        backgroundColor: 'rgba(76, 201, 240, 0.1)',
+                        borderWidth: 2,
+                        fill: true,
+                        tension: 0.4
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    plugins: {
+                        legend: {
+                            labels: {
+                                color: '#e6e6e6'
+                            }
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: false,
+                            grid: {
+                                color: 'rgba(255, 255, 255, 0.1)'
+                            },
+                            ticks: {
+                                color: '#e6e6e6'
+                            }
+                        },
+                        x: {
+                            grid: {
+                                color: 'rgba(255, 255, 255, 0.1)'
+                            },
+                            ticks: {
+                                color: '#e6e6e6'
+                            }
+                        }
+                    }
+                }
+            });
+        }
+        
+        // Функция для сброса данных
+        function resetData() {
+            dashboard.style.display = 'none';
+            errorMessage.style.display = 'none';
+            
+            // Сбрасываем все поля
+            const dataValues = document.querySelectorAll('.data-value');
+            dataValues.forEach(value => {
+                value.textContent = '-';
+            });
+            
+            // Уничтожаем график, если он существует
+            if (motorHoursChart) {
+                motorHoursChart.destroy();
+                motorHoursChart = null;
+            }
+        }
+        
+        // Обработчики событий
+        fetchBtn.addEventListener('click', fetchCNCData);
+        resetBtn.addEventListener('click', resetData);
+        
+        // Загружаем данные при загрузке страницы
+        window.addEventListener('load', fetchCNCData);
+    </script>
+</body>
+</html>
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Мониторинг станков ЧПУ</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background-color: #1a1a2e;
+            color: #e6e6e6;
+            line-height: 1.6;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        header {
+            text-align: center;
+            margin-bottom: 30px;
+            padding: 20px;
+            background: linear-gradient(135deg, #16213e 0%, #0f3460 100%);
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+        
+        h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            color: #4cc9f0;
+        }
+        
+        .description {
+            font-size: 1.1rem;
+            max-width: 800px;
+            margin: 0 auto;
+            color: #ccc;
+        }
+        
+        .dashboard {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+        
+        .data-card {
+            background: #16213e;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+        
+        .data-card h2 {
+            font-size: 1.5rem;
+            margin-bottom: 15px;
+            color: #e94560;
+            border-bottom: 2px solid #0f3460;
+            padding-bottom: 10px;
+        }
+        
+        .data-item {
+            margin-bottom: 10px;
+            display: flex;
+            justify-content: space-between;
+        }
+        
+        .data-label {
+            font-weight: bold;
+            color: #4cc9f0;
+        }
+        
+        .data-value {
+            color: #f0f0f0;
+        }
+        
+        .btn {
+            display: inline-block;
+            background: #e94560;
+            color: white;
+            padding: 12px 25px;
+            border-radius: 5px;
+            text-decoration: none;
+            font-weight: bold;
+            transition: all 0.3s ease;
+            border: none;
+            cursor: pointer;
+            margin: 10px 5px;
+        }
+        
+        .btn:hover {
+            background: #ff6b81;
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(233, 69, 96, 0.4);
+        }
+        
+        .control-panel {
+            text-align: center;
+            margin: 30px 0;
+        }
+        
+        .chart-container {
+            background: #16213e;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+            margin-bottom: 20px;
+        }
+        
+        .chart-title {
+            font-size: 1.2rem;
+            margin-bottom: 15px;
+            color: #4cc9f0;
+            text-align: center;
+        }
+        
+        .error {
+            color: #e94560;
+            text-align: center;
+            margin: 20px 0;
+            padding: 15px;
+            background: rgba(233, 69, 96, 0.1);
+            border-radius: 5px;
+            border-left: 4px solid #e94560;
+        }
+        
+        .loading {
+            text-align: center;
+            margin: 30px 0;
+            color: #4cc9f0;
+        }
+        
+        @media (max-width: 768px) {
+            .dashboard {
+                grid-template-columns: 1fr;
+            }
+            
+            h1 {
+                font-size: 2rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Мониторинг станков ЧПУ</h1>
+            
